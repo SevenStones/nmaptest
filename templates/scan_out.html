@@ -1,0 +1,63 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+{% block extrahead %}
+    <script type="text/javascript" src="{% static "admin/js/vendor/jquery/jquery.js" %}"></script>
+    <script type="text/javascript" src="{% static "admin/js/csrf.js" %}"></script>
+
+    <script>
+
+    function create_post() {
+
+       ipaddress = {{ target }};
+
+       $.ajax({
+           url: "/scan_run/", // the endpoint
+           type: "POST", // http method
+           data: {target: ipaddress}, // data sent with the post request
+
+           // handle a successful response
+           success: function (json) {
+               scan_callback(json);
+           },
+
+           // handle a non-successful response
+           error: function (xhr, errmsg, err) {
+               $('#errors').html("<div class='alert-box alert radius' data-alert>Oops! We have encountered an error: " + errmsg +
+                   " <a href='#' class='close'>&times;</a></div>"); // add the error to the dom
+               console.log("err is...." + err);
+               console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+           }
+       });
+   }
+
+    function scan_callback(data){
+
+        nmap_result_id = document.getElementById("nmapout");
+        nmap_result_id.innerText = data.scanout;
+
+    }
+
+    console.log("CCCUNNNNTTTTT");
+
+
+
+    </script>
+{% endblock extrahead %}
+
+{% block bodyloadscript %}create_post(){% endblock bodyloadscript %}
+
+{% block content %}
+
+
+<h2></h2>
+<div>
+    <form onsubmit="create_post()">
+    <label for="nmapout">scan result</label><textarea id="nmapout"></textarea>
+        <input name="Submit" type="submit" value="Submit">
+    </form>
+</div>
+<div id="errors">
+{{ form.non_field_errors }}
+{{ form.target.errors }}
+</div>
+{% endblock content %}
