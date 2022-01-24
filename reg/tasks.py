@@ -2,7 +2,7 @@ from __future__ import print_function
 from celery import shared_task
 from nmaptest.celery import app
 from libnmap.process import NmapProcess
-from libnmap.parser import NmapParser, NmapParserException
+from libnmap.parser import NmapParser
 
 
 
