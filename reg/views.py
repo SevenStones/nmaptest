@@ -17,16 +17,15 @@ def scan_config(request):
         print("ajaxy submit received")
         form = ScanForm(request.POST)
         if form.is_valid():
-            print("form found to be valid")
+
             ipaddress = form.cleaned_data.get("target")
-            print(type(ipaddress))
+
             scanout['scanout'] = scan_run(ipaddress)
             return HttpResponse(
                 json.dumps(scanout),
                 content_type="application/json"
             )
         else:
-            print("form has problems: {0}".format(form.errors))
             context = {'form': form.errors}
             return JsonResponse(context, status=500)
 
